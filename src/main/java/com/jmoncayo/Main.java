@@ -21,7 +21,7 @@ public class Main {
         probablePrimeSystem.tell(new ManagerBehavior.InstructionCommand("start"));
 
         // Racing Simulation
-        ActorSystem<RaceControllerBehavior.command> raceController = ActorSystem.create(RaceControllerBehavior.create(),"raceControllerSystem");
+        ActorSystem<RaceControllerBehavior.Command> raceController = ActorSystem.create(RaceControllerBehavior.create(),"raceControllerSystem");
         raceController.tell(new RaceControllerBehavior.StartCommand());
 
     }

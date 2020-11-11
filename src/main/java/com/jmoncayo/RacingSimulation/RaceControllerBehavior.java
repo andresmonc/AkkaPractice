@@ -1,32 +1,53 @@
 package com.jmoncayo.RacingSimulation;
 
+import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.*;
 
 import java.io.Serializable;
 
-public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehavior.command> {
+public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehavior.Command> {
 
-    public interface command extends Serializable {
+    public interface Command extends Serializable {
     }
 
-    public static class StartCommand implements command {
+    public static class StartCommand implements Command {
         private static final long serialVersionUID = 1L;
+
         public StartCommand() {
         }
     }
 
-    private RaceControllerBehavior(ActorContext<command> context) {
+    public static class RacerUpdateCommand implements Command {
+        private static final long serialVersionUID = 1L;
+        private ActorRef<RacerBehavior.Command> racer;
+        private int position;
+
+        public RacerUpdateCommand(ActorRef<RacerBehavior.Command> racer, int position) {
+            this.racer = racer;
+            this.position = position;
+        }
+
+        public ActorRef<RacerBehavior.Command> getRacer() {
+            return racer;
+        }
+
+        public int getPosition() {
+            return position;
+        }
+    }
+
+    private RaceControllerBehavior(ActorContext<Command> context) {
         super(context);
     }
 
-    public static Behavior<command> create() {
+    public static Behavior<Command> create() {
         return Behaviors.setup(RaceControllerBehavior::new);
     }
 
 
     @Override
-    public Receive<command> createReceive() {
+    public Receive<Command> createReceive() {
         return newReceiveBuilder()
                 .onMessage(StartCommand.class, startCommand -> {
                     System.out.println("Race Controller lives!!!!!!!");
