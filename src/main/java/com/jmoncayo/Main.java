@@ -22,7 +22,7 @@ public class Main {
 
         // Racing Simulation
         ActorSystem<RaceControllerBehavior.command> raceController = ActorSystem.create(RaceControllerBehavior.create(),"raceControllerSystem");
-
+        raceController.tell(new RaceControllerBehavior.StartCommand());
 
     }
 }
