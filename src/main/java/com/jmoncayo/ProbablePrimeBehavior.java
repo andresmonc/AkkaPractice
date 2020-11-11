@@ -16,9 +16,9 @@ public class ProbablePrimeBehavior extends AbstractBehavior<ProbablePrimeBehavio
     public static class Command implements Serializable {
         private static final long serialVersionUID = 1L;
         private final String message; // the message for the behavior to work with. messages should be immutable. No setters
-        private final ActorRef<String> sender;
+        private final ActorRef<ManagerBehavior.command> sender;
 
-        public Command(String message, ActorRef<String> sender) {
+        public Command(String message, ActorRef<ManagerBehavior.command> sender) {
             this.message = message;
             this.sender = sender;
         }
@@ -27,7 +27,7 @@ public class ProbablePrimeBehavior extends AbstractBehavior<ProbablePrimeBehavio
             return message;
         }
 
-        public ActorRef<String> getSender() {
+        public ActorRef<ManagerBehavior.command> getSender() {
             return sender;
         }
     }
