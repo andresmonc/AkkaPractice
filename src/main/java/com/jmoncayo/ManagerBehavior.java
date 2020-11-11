@@ -7,10 +7,17 @@ import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 
+import java.io.Serializable;
+
 public class ManagerBehavior extends AbstractBehavior<String> {
 
     private ManagerBehavior(ActorContext<String> context) {
         super(context);
+    }
+
+    //our manager can accept different message types so we will use an interface
+    public interface command extends Serializable {
+
     }
 
     public static Behavior<String> create() {
@@ -22,8 +29,8 @@ public class ManagerBehavior extends AbstractBehavior<String> {
         return newReceiveBuilder()
                 .onMessageEquals("start", () -> {
                     for (int i = 0; i < 20; i++) {
-                        ActorRef<String> probablyPrimeActor = getContext().spawn(ProbablePrimeBehavior.create(),"prime-"+ i);
-                        probablyPrimeActor.tell("create");
+                        ActorRef<ProbablePrimeBehavior.Command> probablePrimeActor = getContext().spawn(ProbablePrimeBehavior.create(),"prime-"+ i);
+                        probablePrimeActor.tell(new ProbablePrimeBehavior.Command("create",getContext().getSelf()));
                     }
                     return this;
                 })
