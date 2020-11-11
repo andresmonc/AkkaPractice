@@ -52,7 +52,7 @@ public class ManagerBehavior extends AbstractBehavior<ManagerBehavior.command> {
         return Behaviors.setup(ManagerBehavior::new);
     }
 
-    private SortedSet<BigInteger> sortedPrimes = new TreeSet<>();
+    private final SortedSet<BigInteger> sortedPrimes = new TreeSet<>();
 
     @Override
     public Receive<ManagerBehavior.command> createReceive() {

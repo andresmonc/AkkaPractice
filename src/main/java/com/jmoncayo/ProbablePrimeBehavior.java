@@ -40,15 +40,21 @@ public class ProbablePrimeBehavior extends AbstractBehavior<ProbablePrimeBehavio
         return Behaviors.setup(ProbablePrimeBehavior::new);
     }
 
+    private BigInteger prime;
+
 
     @Override
     public Receive<ProbablePrimeBehavior.Command> createReceive() {
         return newReceiveBuilder()
                 .onAnyMessage(command -> {
+
                     if (command.getMessage().equals("create")) {
-                        BigInteger probablePrime = new BigInteger(2000, new Random()).nextProbablePrime();
-                        command.getSender().tell(new ManagerBehavior.ResultCommand(probablePrime));
+                        if (prime == null) {
+                            prime = new BigInteger(2000, new Random()).nextProbablePrime();
+                        }
+                        command.getSender().tell(new ManagerBehavior.ResultCommand(prime));
                     }
+
                     return this;
                 })
                 .build();
