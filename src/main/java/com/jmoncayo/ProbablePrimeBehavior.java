@@ -46,8 +46,8 @@ public class ProbablePrimeBehavior extends AbstractBehavior<ProbablePrimeBehavio
         return newReceiveBuilder()
                 .onAnyMessage(command -> {
                     if (command.getMessage().equals("create")) {
-                        BigInteger bigInt = new BigInteger(2000, new Random());
-                        System.out.println(bigInt.nextProbablePrime());
+                        BigInteger probablePrime = new BigInteger(2000, new Random()).nextProbablePrime();
+                        command.getSender().tell(new ManagerBehavior.ResultCommand(probablePrime));
                     }
                     return this;
                 })
