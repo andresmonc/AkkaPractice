@@ -45,7 +45,7 @@ public class RacerBehavior extends AbstractBehavior<RacerBehavior.Command> {
         super(context);
     }
 
-    public Behavior<Command> create() {
+    public static Behavior<Command> create() {
         return Behaviors.setup(RacerBehavior::new);
     }
 
