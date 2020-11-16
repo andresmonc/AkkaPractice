@@ -82,7 +82,7 @@ public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehav
                         racer.tell(new RacerBehavior.StartCommand(raceLength));
                     }
                     return Behaviors.withTimers(timers -> {
-                        timers.startTimerAtFixedRate(TIMER_KEY,new GetPositionsCommand(), Duration.ofSeconds(1));
+                        timers.startTimerAtFixedRate(TIMER_KEY,new GetPositionsCommand(), Duration.ofMillis(500));
                         return this;
                     });
                 })
