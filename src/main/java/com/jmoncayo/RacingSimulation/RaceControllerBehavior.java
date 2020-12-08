@@ -127,14 +127,27 @@ public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehav
 
     public Receive<Command> raceCompleted() {
         return newReceiveBuilder()
-                .onMessage(GetPositionsCommand.class,msg ->{
+                .onMessage(GetPositionsCommand.class, msg -> {
                     currentPositions.forEach((racer, time) -> getContext().stop(racer));
+                    displayResults();
                     return Behaviors.withTimers(timers -> {
                         timers.cancelAll();
                         return Behaviors.stopped();
                     });
                 })
                 .build();
+    }
+
+    private void displayResults() {
+        System.out.println("results");
+        finishingTimes.values().stream().sorted().forEach(aLong -> {
+            for (ActorRef<RacerBehavior.Command> key : finishingTimes.keySet()) {
+                if (finishingTimes.get(key) == aLong) {
+                    String racerId = key.path().toString().substring(key.path().toString().length() - 1);
+                    System.out.println("Racer# "+racerId + " : "+ ((double)aLong-start)/1000 + "s");
+                }
+            }
+        });
     }
 
 }
