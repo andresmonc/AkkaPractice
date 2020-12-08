@@ -30,7 +30,7 @@ public class RacerBehavior extends AbstractBehavior<RacerBehavior.Command> {
 
     public static class PositionCommand implements Command {
         private static final long serialVersionUID = 1L;
-        private ActorRef<RaceControllerBehavior.Command> raceController;
+        private final ActorRef<RaceControllerBehavior.Command> raceController;
 
         public PositionCommand(ActorRef<RaceControllerBehavior.Command> raceController) {
             this.raceController = raceController;
@@ -102,7 +102,7 @@ public class RacerBehavior extends AbstractBehavior<RacerBehavior.Command> {
                         newPosition = raceLength;
                     }
                     positionCommand.getRaceController()
-                            .tell(new RaceControllerBehavior.RacerUpdateCommand(getContext().getSelf(), (int) newPosition));
+                            .tell(new RaceControllerBehavior.RacerUpdateCommand(getContext().getSelf(), newPosition));
                     if (newPosition == raceLength) {
                         return completed(raceLength);
                     }

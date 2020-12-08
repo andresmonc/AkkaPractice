@@ -1,6 +1,5 @@
 package com.jmoncayo.RacingSimulation;
 
-import akka.actor.Actor;
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.*;
@@ -25,7 +24,7 @@ public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehav
     public static class RacerUpdateCommand implements Command {
         private static final long serialVersionUID = 1L;
         private final ActorRef<RacerBehavior.Command> racer;
-        private int position;
+        private final int position;
 
         public RacerUpdateCommand(ActorRef<RacerBehavior.Command> racer, int position) {
             this.racer = racer;
@@ -43,7 +42,7 @@ public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehav
 
     public static class FinishedCommand implements Command {
         private static final long serialVersionUID = 1L;
-        private ActorRef<RacerBehavior.Command> racer;
+        private final ActorRef<RacerBehavior.Command> racer;
 
         public FinishedCommand(ActorRef<RacerBehavior.Command> racer) {
             this.racer = racer;
@@ -54,7 +53,7 @@ public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehav
         }
     }
 
-    private class GetPositionsCommand implements Command {
+    private static class GetPositionsCommand implements Command {
         private static final long serialVersionUID = 1L;
 
     }
@@ -129,9 +128,7 @@ public class RaceControllerBehavior extends AbstractBehavior<RaceControllerBehav
     public Receive<Command> raceCompleted() {
         return newReceiveBuilder()
                 .onMessage(GetPositionsCommand.class,msg ->{
-                    currentPositions.forEach((racer, time) -> {
-                        getContext().stop(racer);
-                    });
+                    currentPositions.forEach((racer, time) -> getContext().stop(racer));
                     return Behaviors.withTimers(timers -> {
                         timers.cancelAll();
                         return Behaviors.stopped();
