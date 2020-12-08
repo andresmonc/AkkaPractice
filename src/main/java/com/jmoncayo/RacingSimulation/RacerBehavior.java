@@ -82,7 +82,7 @@ public class RacerBehavior extends AbstractBehavior<RacerBehavior.Command> {
         return newReceiveBuilder()
                 .onMessage(StartCommand.class, startCommand -> {
                     this.random = new Random();
-                    return running(startCommand.getRaceLength(), 0,random.nextInt(30) - 10);
+                    return running(startCommand.getRaceLength(), 0, random.nextInt(30) - 10);
                 })
                 .onMessage(PositionCommand.class, positionCommand -> {
                     positionCommand.getRaceController()
@@ -95,7 +95,7 @@ public class RacerBehavior extends AbstractBehavior<RacerBehavior.Command> {
     public Receive<Command> running(int raceLength, int currentPosition, int averageSpeedAdjustmentFactor) {
         return newReceiveBuilder()
                 .onMessage(PositionCommand.class, positionCommand -> {
-                    determineNextSpeed(raceLength, currentPosition,averageSpeedAdjustmentFactor);
+                    determineNextSpeed(raceLength, currentPosition, averageSpeedAdjustmentFactor);
                     int newPosition = currentPosition;
                     newPosition += getDistanceMovedPerSecond();
                     if (newPosition > raceLength) {
@@ -106,7 +106,7 @@ public class RacerBehavior extends AbstractBehavior<RacerBehavior.Command> {
                     if (newPosition == raceLength) {
                         return completed(raceLength);
                     }
-                    return running(raceLength,newPosition,averageSpeedAdjustmentFactor);
+                    return running(raceLength, newPosition, averageSpeedAdjustmentFactor);
                 })
                 .build();
     }
@@ -116,7 +116,8 @@ public class RacerBehavior extends AbstractBehavior<RacerBehavior.Command> {
                 .onMessage(PositionCommand.class, positionCommand -> {
                     positionCommand.getRaceController()
                             .tell(new RaceControllerBehavior.RacerUpdateCommand(getContext().getSelf(), raceLength));
-                    return Behaviors.same();
+                    positionCommand.getRaceController().tell(new RaceControllerBehavior.FinishedCommand(getContext().getSelf()));
+                    return Behaviors.ignore();
                 })
                 .build();
     }
